@@ -15,5 +15,5 @@ Gem::Specification.new do |gem|
   gem.version       = ExceptionsToSlack::VERSION
 
   gem.add_dependency("slack-notifier", "~> 0.5.0")
-  gem.add_development_dependency("rspec", "~> 2.14.1")
+  gem.add_development_dependency("webmock", "~> 1.18.0")
 end

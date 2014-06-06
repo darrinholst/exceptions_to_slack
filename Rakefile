@@ -1,7 +1,8 @@
 require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
 
-RSpec::Core::RakeTask.new(:spec)
+task :test do
+  Dir.glob('./test/**/*_test.rb').each {|file| require file}
+end
 
-task :default => :spec
+task :default => :test
 

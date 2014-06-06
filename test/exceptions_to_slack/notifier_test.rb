@@ -19,13 +19,21 @@ class TestNotifier < MiniTest::Unit::TestCase
   def test_exceptions_are_sent_to_slack
     def @app.call(env) raise ':boom:' end
 
-    WebMock.stub_request(:post, 'https://the-team.slack.com/services/hooks/incoming-webhook?token=the-token').with(body: {
-      payload: {
-        text: '[RuntimeError] :boom:',
-        channel: CHANNEL,
-        username: 'Notifier'
-      }.to_json
-    })
+    WebMock.stub_request(:post, 'https://the-team.slack.com/services/hooks/incoming-webhook?token=the-token').with do |request|
+      form = URI.decode_www_form(request.body)
+
+      assert_equal 1, form.size
+      assert_equal 2, form[0].size
+      assert_equal 'payload', form[0][0]
+
+      payload = JSON.parse(form[0][1])
+      assert_equal '[RuntimeError] :boom:', payload['text']
+      assert_equal CHANNEL, payload['channel']
+      assert_equal 'Notifier', payload['username']
+      assert !payload['attachments'][0]['text'].empty?
+
+      true
+    end
 
     -> {@notifier.call([])}.must_raise RuntimeError
   end

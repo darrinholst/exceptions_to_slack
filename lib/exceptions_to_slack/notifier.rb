@@ -4,7 +4,7 @@ module ExceptionsToSlack
   class Notifier
     def initialize(app, options = {})
       @app = app
-      @notifier = Slack::Notifier.new(team(options), token(options))
+      @notifier = Slack::Notifier.new(url(options))
       @notifier.channel = options[:channel] || raise("Channel is required")
       @notifier.username = options[:user] || "Notifier"
       @ignore = options[:ignore]
@@ -28,12 +28,8 @@ module ExceptionsToSlack
       end
     end
 
-    def team(options)
-      options[:team] || raise("Team name is required")
-    end
-
-    def token(options)
-      options[:token] || raise("Token is required")
+    def url(options)
+      options[:url] || raise("URL is required")
     end
 
     def message_for(exception)

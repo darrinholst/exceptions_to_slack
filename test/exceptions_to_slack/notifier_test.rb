@@ -1,16 +1,14 @@
 require_relative '../test_helper'
 
 class TestNotifier < MiniTest::Unit::TestCase
-  TEAM = 'the-team'
-  TOKEN = 'the-token'
+  URL = 'https://the.url.com'
   CHANNEL = 'the-channel'
 
   def setup
     @app = MiniTest::Mock.new
 
     @notifier = ExceptionsToSlack::Notifier.new(@app, {
-      team: TEAM,
-      token: TOKEN,
+      url: URL,
       channel: CHANNEL,
       ignore: /ignored/
     })
@@ -19,7 +17,7 @@ class TestNotifier < MiniTest::Unit::TestCase
   def test_exceptions_are_sent_to_slack
     def @app.call(env) raise ':boom:' end
 
-    WebMock.stub_request(:post, 'https://the-team.slack.com/services/hooks/incoming-webhook?token=the-token').with do |request|
+    WebMock.stub_request(:post, 'https://the.url.com').with do |request|
       form = URI.decode_www_form(request.body)
 
       assert_equal 1, form.size

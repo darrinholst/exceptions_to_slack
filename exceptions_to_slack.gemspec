@@ -14,6 +14,6 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = ExceptionsToSlack::VERSION
 
-  gem.add_dependency("slack-notifier", "~> 0.5.0")
+  gem.add_dependency("slack-notifier", "~> 1.4.0")
   gem.add_development_dependency("webmock", "~> 1.18.0")
 end
